@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: excel-saas-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: excel_user
+      POSTGRES_PASSWORD: excel_password
+      POSTGRES_DB: excel_saas
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - excel-saas-network
+
+  # Next.js Application
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: excel-saas-app
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://excel_user:excel_password@postgres:5432/excel_saas?schema=public
+      NEXTAUTH_URL: http://localhost:3000
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET:-change-this-secret-in-production}
+      NODE_ENV: production
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres
+    networks:
+      - excel-saas-network
+    command: sh -c "npx prisma migrate deploy && node server.js"
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  excel-saas-network:
+    driver: bridge
