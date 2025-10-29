@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
         );
       }
       
-      config = workbook.formulaConfig as WorkbookConfig;
+      config = workbook.formulaConfig as unknown as WorkbookConfig;
     } else {
       config = exampleWorkbookConfig;
     }
@@ -90,7 +90,7 @@ export async function GET(request: NextRequest) {
         );
       }
       
-      config = workbook.formulaConfig as WorkbookConfig;
+      config = workbook.formulaConfig as unknown as WorkbookConfig;
     } else {
       config = exampleWorkbookConfig;
     }

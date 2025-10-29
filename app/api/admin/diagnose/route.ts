@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const config = workbook.formulaConfig as WorkbookConfig;
+    const config = workbook.formulaConfig as unknown as WorkbookConfig;
     const engine = new FormulaEngine(config);
 
     // Get all values and check for errors

@@ -6,10 +6,16 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Settings } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
+import { Suspense } from 'react';
 
-export default function Home() {
+function MainContent() {
   const searchParams = useSearchParams();
   const workbookId = searchParams.get('workbookId') || 'default';
+  
+  return <SpreadsheetEditor workbookId={workbookId} />;
+}
+
+export default function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
@@ -57,7 +63,9 @@ export default function Home() {
           </div>
         </div>
 
-        <SpreadsheetEditor workbookId={workbookId} />
+        <Suspense fallback={<div>Loading...</div>}>
+          <MainContent />
+        </Suspense>
 
         {/* Features Section */}
         <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
