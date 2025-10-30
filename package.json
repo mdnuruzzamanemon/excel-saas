@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
   "dev": "next dev",
-  "build": "next build",
+  "build": "prisma generate && next build",
   "start": "next start",
   "lint": "eslint",
   "db:generate": "prisma generate",
@@ -14,9 +14,7 @@
   "docker:build": "docker build -t excel-saas .",
   "docker:up": "docker-compose up -d",
   "docker:down": "docker-compose down",
-  "docker:logs": "docker-compose logs -f",
-  "vercel-build": "prisma generate && prisma db push && next build",
-  "postinstall": "prisma generate"
+  "docker:logs": "docker-compose logs -f"
 },
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.1",
