@@ -1,5 +1,3 @@
-# Multi-stage build for production
-
 # Stage 1: Dependencies
 FROM node:18-alpine AS deps
 RUN apk add --no-cache libc6-compat
@@ -15,12 +13,12 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Generate Prisma Client
-RUN npx prisma generate
+# Generate Prisma Client and check for errors
+RUN npx prisma generate && echo "Prisma Client generated successfully"
 
 # Build the application
 ENV NEXT_TELEMETRY_DISABLED 1
-RUN npm run build
+RUN npm run build || { echo 'Build failed!'; exit 1; }
 
 # Stage 3: Runner
 FROM node:18-alpine AS runner
